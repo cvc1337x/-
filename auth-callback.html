@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Auth callback</title>
+    <style>body{background:#222831;color:#eee;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Poppins,serif}</style>
+  </head>
+  <body>
+    <div id="msg">Processing sign-in...</div>
+
+    <script>
+      // Replace with same client_id and redirect used in index.html script
++      const CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
++      const REDIRECT_URI = window.location.origin + '/auth-callback.html';
++
++      function parseQueryString() {
++        const params = new URLSearchParams(window.location.search);
++        const result = {};
++        for (const [k, v] of params.entries()) result[k] = v;
++        return result;
++      }
++
++      async function exchangeCodeForToken(code, codeVerifier) {
++        const body = new URLSearchParams({
