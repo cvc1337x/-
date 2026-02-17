@@ -320,3 +320,185 @@ footer {
     margin-right: 0;
   }
 }
+
+/* Tablet sizes (768px - 1023px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  header {
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+  .hero {
+    margin: 3rem auto;
+    max-width: calc(100% - 2rem);
+    padding: 1rem;
+  }
+  .heroImg {
+    width: 80%;
+    max-width: 300px;
+  }
+  .name {
+    font-size: 1.8rem;
+  }
+  .title {
+    font-size: 2.2rem;
+  }
+  .aboutMe {
+    margin: 3rem 1rem;
+    gap: 1rem;
+  }
+  .textContainer {
+    margin: 0 1rem;
+  }
+  .works {
+    padding: 5rem 1rem;
+  }
+  .worksContainer {
+    margin: 2rem 0;
+    padding: 2rem 0;
+  }
+  .works li {
+    padding: 1rem 1.5rem;
+  }
+  .works li img {
+    width: 120px;
+    height: 120px;
+  }
+  .contactContainer {
+    margin: 3rem 1rem;
+  }
+}
+
+/* Mobile phones (480px - 767px) */
+@media (max-width: 480px) {
+  * {
+    font-size: 13px;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  header {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+    padding: 0;
+  }
+  .hero {
+    margin: 2rem 0.5rem;
+    max-width: 100%;
+    padding: 0.5rem;
+    gap: 1rem;
+  }
+  .heroImg {
+    width: 90%;
+    max-width: 250px;
+    height: auto;
+  }
+  .name {
+    font-size: 1.5rem;
+  }
+  .title {
+    font-size: 1.8rem;
+  }
+  .heroBtns {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+  .testEntry,
+  .hireMe,
+  .cv {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+  }
+  .aboutMe {
+    margin: 2rem 0.5rem;
+    gap: 1rem;
+    max-width: 100%;
+  }
+  .textContainer {
+    margin: 0 0.5rem;
+  }
+  .aboutMeImg {
+    width: 100%;
+    max-width: 250px;
+  }
+  .textTitle,
+  .projectTitle,
+  .contactTitle {
+    font-size: 1.5rem;
+  }
+  .works {
+    padding: 3rem 0.5rem;
+    background-size: cover;
+  }
+  .worksContainer {
+    margin: 1rem 0.5rem;
+    padding: 1rem 0;
+    gap: 1rem;
+  }
+  .works ul {
+    gap: 0.5rem;
+  }
+  .works li {
+    padding: 0.75rem 1rem;
+    width: 100%;
+  }
+  .works li img {
+    width: 80px;
+    height: 80px;
+  }
+  .contactContainer {
+    margin: 2rem 0.5rem;
+    padding: 1rem 0.5rem;
+    gap: 1rem;
+  }
+  .contact {
+    gap: 1rem;
+    flex-direction: column;
+  }
+  .emailAndPhone {
+    gap: 0.5rem;
+  }
+  .socialMedia {
+    gap: 1rem;
+  }
+  .socialMedia a {
+    padding: 0.75rem;
+  }
+  .socialMedia img {
+    width: 20px;
+    height: 20px;
+  }
+  footer {
+    padding: 1rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  hr {
+    margin: 1rem 0;
+  }
+}
+
+/* Extra small phones (less than 480px) */
+@media (max-width: 380px) {
+  * {
+    font-size: 12px;
+  }
+  .name {
+    font-size: 1.2rem;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .textTitle,
+  .projectTitle,
+  .contactTitle {
+    font-size: 1.2rem;
+  }
+  .loginBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+}

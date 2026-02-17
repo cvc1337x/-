@@ -2,15 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="Professional Portfolio" />
+    <meta name="theme-color" content="#222831" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="stylesheet" href="styles.css" />
     <title>cvc1337</title>
   </head>
   <body>
     <div class="container"></div>
     <header>
-      <div class="headerActions" style="position:relative;">
-            <a href="#" id="loginBtn" class="loginBtn" style="position:absolute; top:12px; right:18px; background:#00bfa5; color:#fff; padding:10px 16px; border-radius:28px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.15);">تسجيل الدخول</a>
+      <div class="headerActions" style="position:relative; display:flex; align-items:center; gap:12px; padding:8px 16px;">
+            <!-- Login button: restored to normal flow (not absolute) -->
+            <a href="#" id="loginBtn" class="loginBtn" style="background:#00bfa5; color:#fff; padding:10px 16px; border-radius:28px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.15);">تسجيل الدخول</a>
+
+            <!-- Hamburger button: fixed to viewport near the right edge (colored spot) -->
+            <a href="#" id="menuBtn" class="menuBtn" style="position:fixed; top:20px; right:18px; width:44px; height:44px; display:flex;align-items:center;justify-content:center;background:transparent;border:none;box-shadow:none;color:#fff; z-index:10000;">
+              <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="0" y="0" width="22" height="2" rx="1" fill="#ffffff"/>
+                <rect x="0" y="7" width="22" height="2" rx="1" fill="#ffffff"/>
+                <rect x="0" y="14" width="22" height="2" rx="1" fill="#ffffff"/>
+              </svg>
+            </a>
+
+            <!-- Dropdown menu for the hamburger button (aligned to the right of viewport) -->
+            <div id="menuDropdown" style="display:none; position:fixed; right:18px; top:68px; background:#ffffff; color:#111; box-shadow:0 6px 18px rgba(0,0,0,0.12); border-radius:8px; padding:8px 6px; min-width:140px; z-index:10000;">
+              <a href="#" class="menuItem" data-index="1" style="display:block; padding:8px 12px; color:#111; text-decoration:none; border-radius:6px;">1</a>
+              <a href="#" class="menuItem" data-index="2" style="display:block; padding:8px 12px; color:#111; text-decoration:none; border-radius:6px;">2</a>
+              <a href="#" class="menuItem" data-index="3" style="display:block; padding:8px 12px; color:#111; text-decoration:none; border-radius:6px;">3</a>
+              <a href="#" class="menuItem" data-index="4" style="display:block; padding:8px 12px; color:#111; text-decoration:none; border-radius:6px;">4</a>
+              <a href="#" class="menuItem" data-index="5" style="display:block; padding:8px 12px; color:#111; text-decoration:none; border-radius:6px;">5</a>
+            </div>
           </div>
     </header>
     <hr />
@@ -53,12 +77,104 @@
     <footer>
     </footer>
   </body>
-  <!-- Simple login button (no Microsoft auth code) -->
+  <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
   <script>
-    // Placeholder behavior for the login button — no MSAL/auth logic.
-    document.getElementById('loginBtn').addEventListener('click', function(e){
-      e.preventDefault();
-      alert('زر تسجيل الدخول (بدون ربط مايكروسوفت)');
+    // ===== MSAL Configuration =====
+    const CLIENT_ID = '46402487-9e4a-41a7-98a8-a3d24f60e2ea'; // Your Azure App Application (client) ID
+    const REDIRECT_URI = window.location.origin + '/'; // Redirect back to home after login
+
+    const msalConfig = {
+      auth: {
+        clientId: CLIENT_ID,
+        authority: 'https://login.microsoftonline.com/common',
+        redirectUri: REDIRECT_URI
+      },
+      cache: {
+        cacheLocation: 'sessionStorage',
+        storeAuthStateInCookie: false
+      }
+    };
+
+    const loginRequest = {
+      scopes: ['openid', 'profile', 'User.Read']
+    };
+
+    const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+    // ===== Initialize MSAL and handle redirect =====
+    msalInstance.handleRedirectPromise().then(response => {
+      if (response) {
+        // User just came back from Microsoft login
+        console.log('Logged in successfully:', response.account);
+        updateAccountUI(response.account);
+      } else {
+        // Check if user is already logged in
+        const accounts = msalInstance.getAllAccounts();
+        if (accounts.length > 0) {
+          updateAccountUI(accounts[0]);
+        }
+      }
+    }).catch(error => {
+      console.error('MSAL error:', error);
     });
+
+    function updateAccountUI(account) {
+      if (account) {
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.textContent = 'مسجل الدخول: ' + (account.name || account.username);
+        loginBtn.style.background = '#4CAF50';
+        loginBtn.onclick = (e) => {
+          e.preventDefault();
+          logoutUser();
+        };
+      }
+    }
+
+    function loginUser(e) {
+      e.preventDefault();
+      if (!CLIENT_ID || CLIENT_ID === 'YOUR_CLIENT_ID_HERE') {
+        alert('تنبيه: يجب تعيين CLIENT_ID من Azure في الملف أولاً');
+        return;
+      }
+      msalInstance.loginRedirect(loginRequest);
+    }
+
+    function logoutUser() {
+      msalInstance.logoutRedirect();
+    }
+
+    // ===== Attach login button click handler =====
+    document.getElementById('loginBtn').addEventListener('click', loginUser);
+
+    // Hamburger menu behavior: toggle dropdown and handle item clicks
+    (function(){
+      const menuBtn = document.getElementById('menuBtn');
+      const menuDropdown = document.getElementById('menuDropdown');
+
+      if (!menuBtn || !menuDropdown) return;
+
+      menuBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', function(e){
+        if (!menuDropdown.contains(e.target) && !menuBtn.contains(e.target)) {
+          menuDropdown.style.display = 'none';
+        }
+      });
+
+      // Item clicks
+      const items = menuDropdown.querySelectorAll('.menuItem');
+      items.forEach(item => {
+        item.addEventListener('click', function(e){
+          e.preventDefault();
+          const idx = this.getAttribute('data-index');
+          alert('تم الضغط على القائمة ' + idx);
+          menuDropdown.style.display = 'none';
+        });
+      });
+    })();
   </script>
 </html>
